@@ -1,68 +1,70 @@
-import Link from "next/link";
-import React from "react";
+'use client';
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 
-interface Post {
-  id: string;
-  title: string;
-  image: string;
-  slug: string;
-}
+const Page = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const searchParamValue = searchParams.get('search') || ''; 
 
-export const data: Post[] = [
-  {
-    id: "1",
-    title: "1111",
-    image:
-      "https://topdev.vn/blog/wp-content/uploads/2023/12/nen-hoc-c-hay-c-plus-4.jpg",
-    slug: "lap-trinh-co-ban-c",
-  },
-  {
-    id: "2",
-    title: "22222",
-    image:
-      "https://tse2.mm.bing.net/th?id=OIP.gGqot8ixN24z5agLwEkNygHaEr&pid=Api&P=0&h=180",
-    slug: "lap-trinh-java-core",
-  },
-  {
-    id: "3",
-    title: "3333",
-    image:
-      "https://funix.edu.vn/wp-content/uploads/2024/02/lap-trinh-php-bang-gi-1.jpg",
-    slug: "lap-trinh-php",
-  },
-  {
-    id: "4",
-    title: "444444",
-    image:
-      "https://tse1.mm.bing.net/th?id=OIP.ivjksIhvAs7TUXbQCxAU0AHaEK&pid=Api&P=0&h=180",
-    slug: "lap-trinh-reactjs",
-  },
-];
+  const [searchValue, setSearchValue] = useState('');
+  const [searchName, setSearchName] = useState('');
+  const [searchCategory, setSearchCategory] = useState('');
 
-export default function ListPost() {
+  const [tempName, setTempName] = useState('');
+  const [tempCategory, setTempCategory] = useState('');
+
+  useEffect(() => {
+    setSearchValue(searchParamValue);
+  }, [searchParamValue]);
+
+  const search = () => {
+    const queryParams = new URLSearchParams({ search: searchValue });
+    router.push(`/posts?${queryParams.toString()}`);
+  };
+
+  const searchNameAndCategory = () => {
+    // Cập nhật searchName và searchCategory sau khi bấm nút Search
+    setSearchName(tempName);
+    setSearchCategory(tempCategory);
+
+    const queryParams = new URLSearchParams({
+      name: tempName,
+      category: tempCategory
+    });
+
+    router.push(`/posts?${queryParams.toString()}`);
+  };
+
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Danh sách bài viết</h1>
-      <div className="flex gap-4">
-        {data.map((data) => (
-          <div
-            key={data.id}
-            className="border border-gray-300 p-4 text-center rounded-md shadow-md"
-          >
-            <img
-              src={data.image}
-              alt={data.title}
-              className="w-full h-24 object-cover mb-2"
-            />
-            <h3 className="text-lg font-semibold mb-2">{data.title}</h3>
-            <Link href={`/listPost/${data.slug}`}>
-              <div className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-                Xem chi tiết
-              </div>
-            </Link>
-          </div>
-        ))}
-      </div>
-    </div>
+    <>
+      <b>Search Value: {searchValue}</b>
+      <input 
+        type="text" 
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)} 
+        placeholder="Enter search term"
+      />
+      <button onClick={search}>Search</button>
+
+      <b>Tên sản phẩm: {searchName}</b>
+      <b>Tên danh mục: {searchCategory}</b>
+
+      <input 
+        type="text" 
+        placeholder="Tìm kiếm theo tên" 
+        value={tempName}
+        onChange={(e) => setTempName(e.target.value)} 
+      />
+      <input 
+        type="text" 
+        placeholder="Tìm kiếm theo danh mục" 
+        value={tempCategory}
+        onChange={(e) => setTempCategory(e.target.value)} 
+      />
+      <button onClick={searchNameAndCategory}>Search by Name & Category</button>
+    </>
   );
-}
+};
+
+export default Page;

@@ -1,16 +1,12 @@
 import Button from "@/components/Button";
-import Page from "@/pages/Page";
-import Helpers from "@/utils/Helpers";
 import React from "react";
-import ListPost from "./listPost/page";
+import ListPost from "./blogs/page";
 
 export default function page() {
   return (
     <div className="ml-[250px] mt-[50px]">
       <h1>Bài 5</h1>
       <Button />
-      <Page />
-      <Helpers />
       <br />
       <h1>Bài 6</h1>
       <h1>SỬ DỤNG ROUTER GROUP</h1>
